@@ -1,39 +1,40 @@
 package com.thoughtworks.rslist.api;
 
+import com.thoughtworks.rslist.dto.RsEvent;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
 public class RsController {
-  private List<String> rsList = initRsList();
-  private List<String> initRsList() {
-    List<String> tempList = new ArrayList<>();
-    tempList.add("第一条事件");
-    tempList.add("第二条事件");
-    tempList.add("第三条事件");
+
+  private List<RsEvent> rsList = initRsList();
+
+  private List<RsEvent> initRsList() {
+    List<RsEvent> tempList = new ArrayList<>();
+    tempList.add(new RsEvent("第一条事件", "无分类"));
+    tempList.add(new RsEvent("第二条事件", "无分类"));
+    tempList.add(new RsEvent("第三条事件", "无分类"));
     return tempList;
   }
 
   @GetMapping("/rs/{index}")
-  public String getRsEvent(@PathVariable int index) {
+  public RsEvent getOneRsEvent(@PathVariable int index) {
     return rsList.get(index - 1);
   }
 
-  @GetMapping("/rs/event")
-  public String getRsEventByRange(@RequestParam(required = false) Integer start,
-                                  @RequestParam(required = false) Integer end) {
-    if(start == null || end == null) {
-      return rsList.toString();
+  @GetMapping("rs/list")
+  public List<RsEvent> getRsEventByRange(@RequestParam(required = false) Integer start,
+                                         @RequestParam(required = false) Integer end) {
+    if (start == null || end == null) {
+      return rsList;
     }
-    return rsList.subList(start - 1, end).toString();
+    return rsList.subList(start - 1, end);
   }
 
   @PostMapping("rs/event")
-  public void addRsEvent(@RequestBody String rsEventInput) {
-    rsList.add(rsEventInput);
+  public void addRsEvent(@RequestBody RsEvent rsEventString) {
+    rsList.add(rsEventString);
   }
 }
