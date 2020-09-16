@@ -12,8 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -102,5 +101,25 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[2].keywords", is("无分类")))
                 .andExpect(jsonPath("$[3].eventName", is("第四条事件")))
                 .andExpect(jsonPath("$[3].keywords", is("无分类")));
+    }
+
+    @Test
+    void should_modify_rs_event() throws Exception {
+        mockMvc.perform(get("/rs/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName", is("第一条事件")))
+                .andExpect(jsonPath("$.keywords", is("无分类")));
+
+        RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String modifiedRsEvent = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(put("/rs/modify/1").content(modifiedRsEvent).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/rs/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.eventName", is("猪肉涨价了")))
+                .andExpect(jsonPath("$.keywords", is("经济")));
     }
 }
