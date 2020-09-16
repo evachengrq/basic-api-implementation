@@ -13,9 +13,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class RsListApplicationTests {
-
     @Autowired
     MockMvc mockMvc;
+
+    @Test
+    void should_get_all_rs_events() throws Exception {
+        mockMvc.perform(get("/rs/event"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("[第一条事件, 第二条事件, 第三条事件]"));
+    }
 
     @Test
     void should_get_one_rs_event() throws Exception {
@@ -35,6 +41,6 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/event?start=1&end=3"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[第一条事件, 第二条事件, 第三条事件]"));
-    }
 
+    }
 }
