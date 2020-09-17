@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.RsEvent;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,17 +20,17 @@ public class RsController {
     }
 
     @GetMapping("/rs/{index}")
-    public RsEvent getOneRsEvent(@PathVariable int index) {
-        return rsList.get(index - 1);
+    public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable int index) {
+        return ResponseEntity.ok().body(rsList.get(index));
     }
 
     @GetMapping("rs/list")
-    public List<RsEvent> getRsEventByRange(@RequestParam(required = false) Integer start,
+    public ResponseEntity<List<RsEvent>> getRsEventByRange(@RequestParam(required = false) Integer start,
                                            @RequestParam(required = false) Integer end) {
         if (start == null || end == null) {
-            return rsList;
+            return ResponseEntity.ok().body(rsList);
         }
-        return rsList.subList(start - 1, end);
+        return ResponseEntity.ok().body(rsList.subList(start - 1, end));
     }
 
     @PostMapping("rs/event")
@@ -38,12 +39,14 @@ public class RsController {
     }
 
     @PutMapping("/rs/modify/{index}")
-    public void modifyRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
+    public ResponseEntity<List<RsEvent>> modifyRsEvent(@PathVariable int index, @RequestBody RsEvent rsEvent) {
         rsList.set(index - 1, rsEvent);
+        return ResponseEntity.ok().body(rsList);
     }
 
     @DeleteMapping("/rs/delete/{index}")
-    public void deleteRsEvent(@PathVariable int index) {
+    public ResponseEntity<List<RsEvent>> deleteRsEvent(@PathVariable int index) {
         rsList.remove(index - 1);
+        return ResponseEntity.ok().body(rsList);
     }
 }

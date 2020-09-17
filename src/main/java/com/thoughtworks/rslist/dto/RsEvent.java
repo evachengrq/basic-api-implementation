@@ -1,7 +1,11 @@
 package com.thoughtworks.rslist.dto;
 
+import javax.validation.constraints.NotEmpty;
+
 public class RsEvent {
+    @NotEmpty
     private String eventName;
+    @NotEmpty
     private String keywords;
 
     public RsEvent(String eventName, String keywords) {
