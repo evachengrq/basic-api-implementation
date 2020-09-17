@@ -74,4 +74,15 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void should_not_register_user_when_age_is_larger_than_100() throws Exception {
+        User user = new User("Eva", "female", 101, "Eva@twuc.com", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userStr = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user/register")
+                .content(userStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }
