@@ -85,4 +85,15 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void should_not_register_user_when_email_is_invalid() throws Exception {
+        User user = new User("Eva", "female", 101, "@twuc.com", "18888888888");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userStr = objectMapper.writeValueAsString(user);
+        mockMvc.perform(post("/user/register")
+                .content(userStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }
