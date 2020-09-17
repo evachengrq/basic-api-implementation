@@ -18,6 +18,7 @@ public class User {
     private Integer age;
     @Email
     private String email;
+    @NotEmpty
     private String phone;
     private Integer vote = 10;
 
