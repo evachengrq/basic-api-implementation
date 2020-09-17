@@ -13,7 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,24 +29,14 @@ class RsListApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName", is("第一条事件")))
                 .andExpect(jsonPath("$.keywords", is("无分类")));
-
-
         mockMvc.perform(get("/rs/2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName", is("第二条事件")))
                 .andExpect(jsonPath("$.keywords", is("无分类")));
-
         mockMvc.perform(get("/rs/3"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName", is("第三条事件")))
                 .andExpect(jsonPath("$.keywords", is("无分类")));
-    }
-
-    @Test
-    void contextLoads() throws Exception {
-        mockMvc.perform(get("/rs/list"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("[第一条事件, 第二条事件, 第三条事件]"));
     }
 
     @Test
@@ -85,17 +76,14 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[1].keywords", is("无分类")))
                 .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                 .andExpect(jsonPath("$[2].keywords", is("无分类")));
-
         RsEvent addRsEvent = new RsEvent("第四条事件", "无分类");
         ObjectMapper objectMapper = new ObjectMapper();
         final String addRsEventJson = objectMapper.writeValueAsString(addRsEvent);
-
         mockMvc.perform(post("/rs/event").content("第四条事件").contentType(MediaType.APPLICATION_JSON));
         mockMvc.perform(post("/rs/event")
                 .content(addRsEventJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
         mockMvc.perform(get("/rs/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(4)))
@@ -115,14 +103,11 @@ class RsListApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName", is("第一条事件")))
                 .andExpect(jsonPath("$.keywords", is("无分类")));
-
         RsEvent rsEvent = new RsEvent("猪肉涨价了", "经济");
         ObjectMapper objectMapper = new ObjectMapper();
         String modifiedRsEvent = objectMapper.writeValueAsString(rsEvent);
-
         mockMvc.perform(put("/rs/modify/1").content(modifiedRsEvent).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
         mockMvc.perform(get("/rs/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName", is("猪肉涨价了")))
