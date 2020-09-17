@@ -20,6 +20,7 @@ public class User {
     private String email;
     @NotEmpty
     @Size(min = 11, max = 11)
+    @Pattern(regexp = "^1")
     private String phone;
     private Integer vote = 10;
 
