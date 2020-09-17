@@ -3,9 +3,12 @@ package com.thoughtworks.rslist.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+
 @Data
 @NoArgsConstructor
 public class User {
+    @NotEmpty
     private String name;
     private String gender;
     private Integer age;
