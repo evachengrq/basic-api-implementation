@@ -13,6 +13,7 @@ public class User {
     private String name;
     @NotEmpty
     private String gender;
+    @NotNull
     @Min(18)
     @Max(100)
     private Integer age;
